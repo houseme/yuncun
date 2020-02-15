@@ -17,7 +17,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        Redis::connection()->incr('counter');
+        Redis::connection('counter')->incr('counter');
         return response()->json(HotComment::getOneRandHotComment());
     }
 
