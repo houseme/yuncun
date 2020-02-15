@@ -4,14 +4,15 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use App\Song;
 
-class HotComment extends Model 
+class HotComment extends Model
 {
     protected $guarded = [];
 
     public function song()
     {
-        return $this->belongsTo('App\Song', 'song_id', 'song_id');
+        return $this->belongsTo(Song::class, 'song_id', 'song_id');
     }
 
     public static function getRandHotComment($length=1)
@@ -27,21 +28,21 @@ class HotComment extends Model
     public static function getOneRandHotComment()
     {
         $comment = collect(DB::select("
-            SELECT 
-                t3.song_id, 
-                t3.title, 
-                t3.images, 
-                t3.author, 
-                t3.album, 
-                t3.description, 
+            SELECT
+                t3.song_id,
+                t3.title,
+                t3.images,
+                t3.author,
+                t3.album,
+                t3.description,
                 '' as 'mp3_url',
                 t3.published_date,
-                t1.comment_id, 
-                t1.user_id AS comment_user_id, 
-                t1.nickname AS comment_nickname, 
-                t1.avatar_url AS comment_avatar_url, 
-                t1.liked_count AS comment_liked_count, 
-                t1.content AS comment_content, 
+                t1.comment_id,
+                t1.user_id AS comment_user_id,
+                t1.nickname AS comment_nickname,
+                t1.avatar_url AS comment_avatar_url,
+                t1.liked_count AS comment_liked_count,
+                t1.content AS comment_content,
                 t1.published_date AS comment_published_date
             FROM hot_comments t1
             JOIN (

@@ -6,12 +6,12 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 use GuzzleHttp\Client;
 use GuzzleHttp\Pool;
 use QL\QueryList;
 use App\Song;
-use App\HotComment;
 
 class HotCommentsSync implements ShouldQueue
 {
@@ -27,7 +27,7 @@ class HotCommentsSync implements ShouldQueue
     /**
      * Create a new job instance.
      *
-     * @return void
+     * @param $songList
      */
     public function __construct($songList)
     {
@@ -62,17 +62,17 @@ class HotCommentsSync implements ShouldQueue
 
                 // 拆解组合歌曲详情
                 $songInfo = [
-                    'song_id' => array_get($songContents, 'songs.0.id'),
-                    'title' => array_get($songContents, 'songs.0.name'),
-                    'images' => 'https:'.ltrim(array_get($songContents, 'songs.0.album.picUrl'), 'http:'),
-                    'author' => array_get($songContents, 'songs.0.artists.0.name'),
+                    'song_id' => Arr::get($songContents, 'songs.0.id'),
+                    'title' => Arr::get($songContents, 'songs.0.name'),
+                    'images' => 'https:'.ltrim(Arr::get($songContents, 'songs.0.album.picUrl'), 'http:'),
+                    'author' => Arr::get($songContents, 'songs.0.artists.0.name'),
                     'description' => sprintf(
-                        '歌手：%s。所属专辑：%s。', 
-                        array_get($songContents, 'songs.0.artists.0.name'),
-                        array_get($songContents, 'songs.0.album.name')
+                        '歌手：%s。所属专辑：%s。',
+                        Arr::get($songContents, 'songs.0.artists.0.name'),
+                        Arr::get($songContents, 'songs.0.album.name')
                     ),
-                    'album' => array_get($songContents, 'songs.0.album.name'),
-                    'published_date' => ((int)array_get($songContents, 'songs.0.album.publishTime') / 1000),
+                    'album' => Arr::get($songContents, 'songs.0.album.name'),
+                    'published_date' => ((int)Arr::get($songContents, 'songs.0.album.publishTime') / 1000),
                 ];
 
                 $song = new Song($songInfo);

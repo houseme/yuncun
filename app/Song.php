@@ -2,12 +2,14 @@
 
 namespace App;
 
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Database\Eloquent\Model;
 use GuzzleHttp\Client as Http;
-use GuzzleHttp\Pool;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 use QL\QueryList;
 
-class Song extends Model 
+class Song extends Model
 {
     protected $guarded = [];
     // 线程数
@@ -17,15 +19,19 @@ class Song extends Model
         'published_date'
     ];
 
+    /****
+     * @return HasMany
+     */
     public function hotcomment()
     {
-        return $this->hasMany('App\HotComment', 'song_id', 'song_id');
+        return $this->hasMany(HotComment::class, 'song_id', 'song_id');
     }
 
     /**
      * 获取热歌榜歌曲列表
      *
      * @return array
+     * @throws GuzzleException
      */
     public function getTopList()
     {
@@ -36,7 +42,9 @@ class Song extends Model
      * 通过歌单 Id 获取歌曲列表
      *
      * @param string $id
-     * @return void
+     *
+     * @return array
+     * @throws GuzzleException
      */
     public function getPlayList($id)
     {
@@ -47,7 +55,9 @@ class Song extends Model
      * 获取歌单列表
      *
      * @param string $url
+     *
      * @return array
+     * @throws GuzzleException
      */
     public function getList($url)
     {
@@ -65,7 +75,7 @@ class Song extends Model
             'title' => ['.f-hide a', 'text']
         ])->query()->getData(function($item) {
             return [
-                'id' => str_after($item['id'], '='),
+                'id' => Str::after($item['id'], '='),
                 'title' => $item['title']
             ];
         });

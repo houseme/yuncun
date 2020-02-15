@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Jobs\HotCommentsSync;
+use GuzzleHttp\Exception\GuzzleException;
+use Illuminate\Http\RedirectResponse;
 use App\Song;
 use App\HotComment;
+use Illuminate\Routing\Redirector;
 
 class HomeController extends Controller
 {
@@ -30,6 +33,10 @@ class HomeController extends Controller
 
     /**
      * 重定向歌曲 URL.
+     *
+     * @param $song_id
+     *
+     * @return RedirectResponse|Redirector
      */
     public function redirectMusicUrl($song_id)
     {
@@ -39,6 +46,10 @@ class HomeController extends Controller
 
     /**
      * 提交歌单
+     *
+     * @param $id
+     *
+     * @throws GuzzleException
      */
     public function submit($id)
     {

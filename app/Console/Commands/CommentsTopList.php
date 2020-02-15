@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Song;
 use App\HotComment;
 use App\Jobs\HotCommentsSync;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
@@ -27,8 +28,6 @@ class CommentsTopList extends Command
     /**
      * 创建一个新的命令实例。
      *
-     * @param  DripEmailer  $drip
-     * @return void
      */
     public function __construct()
     {
@@ -39,6 +38,7 @@ class CommentsTopList extends Command
      * 执行控制台命令。
      *
      * @return mixed
+     * @throws GuzzleException
      */
     public function handle()
     {
