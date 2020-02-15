@@ -3,11 +3,9 @@
 namespace App\Console\Commands;
 
 use App\Song;
-use App\HotComment;
 use App\Jobs\HotCommentsSync;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
 
 class CommentsTopList extends Command
 {
@@ -16,7 +14,7 @@ class CommentsTopList extends Command
      *
      * @var string
      */
-    protected $signature = 'comments:toplist';
+    protected $signature = 'comments:topList';
 
     /**
      * 控制台命令说明。

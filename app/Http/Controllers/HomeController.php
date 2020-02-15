@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\HotComment;
 use App\Jobs\HotCommentsSync;
+use App\Song;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\RedirectResponse;
-use App\Song;
-use App\HotComment;
 use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\Redis;
 
 class HomeController extends Controller
 {
@@ -16,6 +17,7 @@ class HomeController extends Controller
      */
     public function index()
     {
+        Redis::connection()->incr('counter');
         return response()->json(HotComment::getOneRandHotComment());
     }
 
@@ -25,9 +27,9 @@ class HomeController extends Controller
     public function getCount()
     {
         return response()->json([
-            'songs_count' => Song::count(),
-            'comments_count' => HotComment::count(),
-            'api_request_count' => (int)app('redis')->get('counter_/'),
+            'songs_count'       => Song::count(),
+            'comments_count'    => HotComment::count(),
+            'api_request_count' => (int)app('redis')->get('counter'),
         ]);
     }
 
