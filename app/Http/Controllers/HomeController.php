@@ -29,7 +29,7 @@ class HomeController extends Controller
         return response()->json([
             'songs_count'       => Song::count(),
             'comments_count'    => HotComment::count(),
-            'api_request_count' => (int)app('redis')->get('counter'),
+            'api_request_count' => (int)(Redis::connection('counter')->get('counter')),
         ]);
     }
 
