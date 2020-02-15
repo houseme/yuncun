@@ -63,7 +63,7 @@ class HotComment extends Model
         "))->first();
 
         // 插入音乐链接
-        $comment->mp3_url = 'https://api.comments.hk/music/'.$comment->song_id;
+        $comment->mp3_url = 'https://api.comments.xmb.xyz/music/'.$comment->song_id;
 
         // TODO 歌词链接 http://music.163.com/api/song/media?id=
 
