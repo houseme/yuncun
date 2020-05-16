@@ -6,6 +6,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Database\Eloquent\Model;
 use GuzzleHttp\Client as Http;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use QL\QueryList;
 
@@ -69,17 +70,16 @@ class Song extends Model
                 'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8'
             ]
         ]);
-
-        $hotSongs = QueryList::html($contents->getBody()->getContents())->rules([
-            'id' => ['.f-hide a', 'href'],
-            'title' => ['.f-hide a', 'text']
-        ])->query()->getData(function($item) {
+        $content = $contents->getBody()->getContents();
+        $hotSongs = QueryList::html($content)->rules([
+            'id' => ['a', 'href'],
+            'title' => ['a', 'text']
+        ])->range('.f-hide li')->query()->getData(function($item) {
             return [
                 'id' => Str::after($item['id'], '='),
                 'title' => $item['title']
             ];
         });
-
-        return $hotSongs->toArray();
+        return $hotSongs->all();
     }
 }

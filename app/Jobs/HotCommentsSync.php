@@ -15,6 +15,7 @@ use App\Song;
 
 class HotCommentsSync implements ShouldQueue
 {
+
     use InteractsWithQueue, Queueable, SerializesModels;
 
     // 工作线程数
@@ -44,10 +45,11 @@ class HotCommentsSync implements ShouldQueue
     {
         $client = new Client();
         $songList = $this->songList;
-        $requests = function ($total) use ($client, $songList) {
+
+        $requests = function ($total) use ($client, $songList){
             foreach ($songList as $song) {
                 $uri = 'http://music.163.com/api/song/detail?ids=['.$song['id'].']';
-                yield function() use ($client, $uri) {
+                yield function () use ($client, $uri){
                     return $client->getAsync($uri);
                 };
             }
@@ -55,23 +57,23 @@ class HotCommentsSync implements ShouldQueue
 
         $pool = new Pool($client, $requests($this->total), [
             'concurrency' => $this->concurrency,
-            'fulfilled' => function ($response, $index) use ($client) {
+            'fulfilled'   => function ($response, $index) use ($client){
 
                 // 获取歌曲详情
                 $songContents = json_decode($response->getBody()->getContents(), true);
 
                 // 拆解组合歌曲详情
                 $songInfo = [
-                    'song_id' => Arr::get($songContents, 'songs.0.id'),
-                    'title' => Arr::get($songContents, 'songs.0.name'),
-                    'images' => 'https:'.ltrim(Arr::get($songContents, 'songs.0.album.picUrl'), 'http:'),
-                    'author' => Arr::get($songContents, 'songs.0.artists.0.name'),
-                    'description' => sprintf(
+                    'song_id'        => Arr::get($songContents, 'songs.0.id'),
+                    'title'          => Arr::get($songContents, 'songs.0.name'),
+                    'images'         => 'https:'.ltrim(Arr::get($songContents, 'songs.0.album.picUrl'), 'http:'),
+                    'author'         => Arr::get($songContents, 'songs.0.artists.0.name'),
+                    'description'    => sprintf(
                         '歌手：%s。所属专辑：%s。',
                         Arr::get($songContents, 'songs.0.artists.0.name'),
                         Arr::get($songContents, 'songs.0.album.name')
                     ),
-                    'album' => Arr::get($songContents, 'songs.0.album.name'),
+                    'album'          => Arr::get($songContents, 'songs.0.album.name'),
                     'published_date' => ((int)Arr::get($songContents, 'songs.0.album.publishTime') / 1000),
                 ];
 
@@ -85,7 +87,7 @@ class HotCommentsSync implements ShouldQueue
                 $song->save();
 
                 // 获取热评
-                $hotCommentsResponse = $client->request('GET', 'http://music.163.com/api/v1/resource/comments/R_SO_4_'. $songInfo['song_id'] .'?limit=15&offset=0');
+                $hotCommentsResponse = $client->request('GET', 'http://music.163.com/api/v1/resource/comments/R_SO_4_'.$songInfo['song_id'].'?limit=15&offset=0');
 
                 $_hotComments = json_decode($hotCommentsResponse->getBody()->getContents(), true);
 
@@ -93,12 +95,12 @@ class HotCommentsSync implements ShouldQueue
 
                 foreach ($_hotComments['hotComments'] as $hotc) {
                     $hotComments[] = [
-                        'user_id' => $hotc['user']['userId'],
-                        'nickname' => $hotc['user']['nickname'],
-                        'avatar_url' => 'https:'.ltrim($hotc['user']['avatarUrl'], 'http:'),
-                        'comment_id' => $hotc['commentId'],
-                        'liked_count' => $hotc['likedCount'],
-                        'content' => preg_replace('/\s+/', ' ', $hotc['content']),
+                        'user_id'        => $hotc['user']['userId'],
+                        'nickname'       => $hotc['user']['nickname'],
+                        'avatar_url'     => 'https:'.ltrim($hotc['user']['avatarUrl'], 'http:'),
+                        'comment_id'     => $hotc['commentId'],
+                        'liked_count'    => $hotc['likedCount'],
+                        'content'        => preg_replace('/\s+/', ' ', $hotc['content']),
                         'published_date' => date('Y/m/d H:i:s', ($hotc['time'] / 1000)),
                     ];
                 }
@@ -109,15 +111,16 @@ class HotCommentsSync implements ShouldQueue
                 $song->hotcomment()->createMany($hotComments);
 
                 if (++$index == $this->total) {
-                    Log::info('同步完成,同步数: '. $this->total);
+                    Log::info('同步完成,同步数: '.$this->total);
                 }
             },
-            'rejected' => function ($reason, $index){
-                Log::error('同步失败,异常消息: '. $reason);
+            'rejected'    => function ($reason, $index){
+                Log::error('同步失败,异常消息: '.$reason);
             },
         ]);
 
         $promise = $pool->promise();
         $promise->wait();
     }
+
 }
