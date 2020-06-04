@@ -76,6 +76,9 @@ class HotCommentsSync implements ShouldQueue
                     'album'          => Arr::get($songContents, 'songs.0.album.name'),
                     'published_date' => ((int)Arr::get($songContents, 'songs.0.album.publishTime') / 1000),
                 ];
+                if (empty($songInfo['song_id']) || empty($songInfo['title']) || empty($songInfo['author']) || empty($songInfo['description']) || empty($songInfo['album'])) {
+                    return false;
+                }
 
                 $song = new Song($songInfo);
 
