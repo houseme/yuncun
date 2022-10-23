@@ -13,13 +13,13 @@
         "axios": "^1.1",
         "bootstrap": "^4.6.2",
         "cross-env": "^7.0",
-        "jquery": "^3.5",
+        "jquery": "^3.6",
         "laravel-mix": "^4.0.7",
         "lodash": "^4.17.21",
         "resolve-url-loader": "^5.0.0",
         "popper.js": "^1.16",
         "sass": "^1.55.0",
         "sass-loader": "^13.1.0",
-        "vue": "^2.5.17"
+        "vue": "^3.2.41"
     }
 }
