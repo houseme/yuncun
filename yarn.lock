@@ -3495,9 +3495,9 @@ kind-of@^6.0.0, kind-of@^6.0.2:
   version "6.0.2"
   resolved "https://registry.yarnpkg.com/kind-of/-/kind-of-6.0.2.tgz#01146b36a6218e64e58f3a8d66de5d7fc6f6d051"
 
-klona@^2.0.4:
-  version "2.0.5"
-  resolved "https://registry.yarnpkg.com/klona/-/klona-2.0.5.tgz#d166574d90076395d9963aa7a928fabb8d76afbc"
+klona@^2.0.6:
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/klona/-/klona-2.0.6.tgz#85bffbf819c03b2f53270412420a4555ef882e22"
 
 laravel-mix@^5.0.9:
   version "5.0.9"
@@ -5159,11 +5159,11 @@ safe-regex@^1.1.0:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/safer-buffer/-/safer-buffer-2.1.2.tgz#44fa161b0187b9549dd84bb91802f9bd8385cd6a"
 
-sass-loader@^13.2.0:
-  version "13.2.0"
-  resolved "https://registry.yarnpkg.com/sass-loader/-/sass-loader-13.2.0.tgz#80195050f58c9aac63b792fa52acb6f5e0f6bdc3"
+sass-loader@^13.3.1:
+  version "13.3.1"
+  resolved "https://registry.yarnpkg.com/sass-loader/-/sass-loader-13.3.1.tgz#32ee5791434b9b4dbd1adcce76fcb4cea49cc12c"
   dependencies:
-    klona "^2.0.4"
+    klona "^2.0.6"
     neo-async "^2.6.2"
 
 sass@^1.61.0:
