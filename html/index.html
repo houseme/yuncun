@@ -256,7 +256,7 @@
 
         function getCount() {
             var random = Math.random();
-            fetch(api_domain+'/count?random='+random)
+            fetch(api_domain+'/counter?random='+random)
             .then(function (response) {
                 return response.json();
             })
