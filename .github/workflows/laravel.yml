@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: shivammathur/setup-php@4bd44f22a98a19e0950cbad5f31095157cc9621b
+    - uses: shivammathur/setup-php@c665c7a15b5295c2488ac8a87af9cb806cd72198
       with:
         php-version: '8.0'
     - uses: actions/checkout@v3
